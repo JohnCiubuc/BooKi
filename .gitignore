@@ -1,0 +1,5 @@
+*.pdf
+# generated card import files and cropped figures
+cards/*.txt
+cards/media/
+__pycache__/
