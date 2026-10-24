@@ -1,5 +1,5 @@
 """Overlap check: search UNSUSPENDED Anki cards (all decks) for each query, print matching note text.
-Usage: search_active.py <queries.txt> [extra Anki search, e.g. '-"deck:BooKi::Mettler::Ch11 FDG PET"']
+Usage: search_active.py <queries.txt> [extra Anki search, e.g. '-deck:BooKi*']
 queries.txt: one line per candidate, "label | anki search terms"."""
 import html, json, re, sys, urllib.request
 

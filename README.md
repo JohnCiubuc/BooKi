@@ -33,23 +33,27 @@ The full rules (card-writing style, number and image policy, tags, flags) are in
 
 ## Usage
 
+Works with any book. Replace `<book>_ch<NN>` with your own slug, e.g. `mettler_ch11`.
+
 ```bash
-# 1. crop figures from PDF pages 335-368
-.venv/bin/python tools/crop_figs.py "<book>.pdf" 335 368 /tmp/figs mettler_ch11
+# 1. crop figures from a PDF page range
+.venv/bin/python tools/crop_figs.py "<book>.pdf" <first> <last> /tmp/figs <book>_ch<NN>
 
 # 2. overlap check: one "label | anki search" per line
 python3 tools/search_active.py queries.txt '-deck:BooKi*'
 
-# 3. build the import file + copy figures into cards/media/
-python3 cards/mettler_ch11.py /tmp/figs
+# 3. start the chapter's card list from the template, fill it in, then build
+cp tools/chapter_template.py cards/<book>_ch<NN>.py
+python3 cards/<book>_ch<NN>.py /tmp/figs
 
 # 4. push to Anki (skips notes already in the deck)
-python3 tools/push_anki.py cards/mettler_ch11.txt cards/media
+python3 tools/push_anki.py cards/<book>_ch<NN>.txt cards/media
 ```
 
-`cards/mettler_ch11.py` is the template for new chapters: a list of
-`(type, cloze_text, back_extra, figure_or_None, flags)` tuples plus a docstring of facts skipped
-as already covered.
+A chapter file sets the book name, deck, tags and slug, plus a list of
+`(type, cloze_text, back_extra, figure_or_None, flags)` tuples and a docstring of facts skipped as
+already covered. The whole `cards/` folder stays local: it is git-ignored because its content is
+derived from copyrighted books.
 
 ## Layout
 
@@ -60,8 +64,8 @@ tools/
   search_active.py   overlap check against unsuspended Anki cards
   build_cards.py     card list → Anki import file, tags, figure copy
   push_anki.py       upload media and add notes through AnkiConnect
-cards/
-  <book>_ch<NN>.py   per-chapter card lists (generated .txt and media/ are ignored)
+  chapter_template.py  starting point for a chapter's card list
+cards/               local only (git-ignored): per-chapter card lists, import files, figures
 ```
 
 ## Tags

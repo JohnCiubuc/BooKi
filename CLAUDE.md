@@ -67,34 +67,43 @@ Use these types to *find* facts; let the chapter decide the mix (no quotas).
 - **Images**: only when the image itself teaches the finding (recognition). The figure goes on
   the front, above the cloze. No decorative images, and don't reuse near-identical whole-body
   images for unrelated facts. Captions go in Back Extra (shortened), never on the image.
-- **Back Extra**: `<Book> Fig x.y, p.<printed page>` plus one or two lines of context. For
-  Mettler, printed page = PDF page − 7.
+- **Back Extra**: `<Book> Fig x.y, p.<printed page>` plus one or two lines of context. Cite the
+  printed page (see "Starting a new book" for the PDF → printed offset).
 - Anything I add beyond the source (corrections, newer knowledge) is labelled as such in Back Extra.
-- **Outdated content** (the book predates current practice, e.g., Mettler 2019 vs PSMA/Lu-177):
+- **Outdated content** (the book's edition predates current practice):
   keep the card faithful to the book, add `flag::outdated`, and note the current practice in Back Extra.
 - Institution- or guideline-dependent values get `flag::verify`.
 
+## Starting a new book
+
+Nothing in the tools is book-specific; each book only needs, on first use:
+- a short name (`<Book>`, e.g. used in decks and Back Extra) and a lowercase slug (`<book>`);
+- the PDF → printed page offset, worked out from one page and recorded in each chapter file's docstring;
+- its edition year, to judge what is `flag::outdated`.
+
 ## Decks and tags
 
-- Deck: `BooKi::<Book>::<Chapter short name>` (e.g., `BooKi::Mettler::Ch11 FDG PET`).
+- Deck: `BooKi::<Book>::<Chapter short name>` (e.g., `BooKi::<Book>::Ch07 Thyroid`).
 - Tags (hierarchical):
   - `ABR::<Section>::<Topic>` (e.g., `ABR::NucMed::Oncology`)
   - `type::<type>` (table above)
-  - `src::<book>::ch<NN>` (e.g., `src::mettler::ch11`)
+  - `src::<book>::ch<NN>` (e.g., `src::<book>::ch07`)
   - `flag::verify`, `flag::outdated` as needed
 - The Anki notetype is the built-in **Cloze** (`Text`, `Back Extra`). Media filenames are
   `<book>_ch<NN>_p<pdfpage>_<n>.jpg`.
 
 ## Tools
 
-- `tools/crop_figs.py <pdf> <first> <last> <outdir> <prefix>` (prefix e.g. `mettler_ch11`): crops each figure (clusters of embedded
+- `tools/crop_figs.py <pdf> <first> <last> <outdir> <prefix>` (prefix = `<book>_ch<NN>`): crops each figure (clusters of embedded
   images + vector overlays) to JPEG. Needs PyMuPDF (scratch venv; not installed system-wide).
 - `tools/search_active.py <queries.txt> [extra filter]`: overlap check. Each line is
   `label | anki search terms`; prints unsuspended matching notes with their deck.
 - `tools/build_cards.py`: `build(cards, deck, src, abr, ...)` writes the import file, applies
   tags, enforces ≤ 2 cloze numbers, and copies figures to `cards/media/`.
 - `cards/<book>_ch<NN>.py`: one per chapter. It holds that chapter's card list and a docstring
-  listing the facts skipped as covered. `cards/mettler_ch11.py` is the template.
+  listing the facts skipped as covered. Start each one from `tools/chapter_template.py`.
   Run it as `python3 cards/<book>_ch<NN>.py <figdir>`.
 - `tools/push_anki.py <file> [media_dir]`: uploads media and adds notes (duplicate check scoped to the deck).
+- `cards/` is git-ignored (the repo is public): chapter card lists, import files, and
+  figures derived from copyrighted books never get committed.
 - To redo a chapter: delete only its BooKi deck (after confirming every note in it is ours), then push.

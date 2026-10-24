@@ -1,5 +1,4 @@
 *.pdf
-# generated card import files and cropped figures
-cards/*.txt
-cards/media/
+# card lists, import files and figures are derived from copyrighted books: keep local
+cards/
 __pycache__/
